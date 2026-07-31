@@ -5,6 +5,7 @@ import "./styles.css";
 
 const humanBoard = document.querySelector(".human .board");
 const computerBoard = document.querySelector(".enemy .board");
+const pTurn = document.querySelector(".headers p");
 
 // create players
 const human = new Player("human");
@@ -13,7 +14,12 @@ const computer = new Player("computer");
 // create game
 const game = new GameController(human, computer);
 
+let isGameOver = false;
+
 function attackCallback(row, col) {
+    if (isGameOver) {
+        return { valid: false, hit: false, gameOver: true, row, col };
+    }
     if (game.getCurrentPlayer() !== human) {
         return { valid: false, hit: false, gameOver: false, row, col };
     }
@@ -21,14 +27,25 @@ function attackCallback(row, col) {
     const result = game.playTurn(row, col);
 
     if (result.valid && result.gameOver) {
-        console.log(`${result.winner.type} wins!`);
+        pTurn.textContent = `${result.winner.type} wins!`;
+        computerBoard.classList.add("disabled");
+        isGameOver = true;
     } else if (result.valid && !result.gameOver) {
+        pTurn.textContent = "Computer attacks!";
+        computerBoard.classList.add("disabled");
         setTimeout(() => {
             const computerResult = game.playComputerTurn();
             markCell(humanBoard, computerResult.row, computerResult.col, computerResult.hit);
 
             if (computerResult.gameOver) {
-                console.log(`${computerResult.winner.type} wins!`);
+                pTurn.textContent = `${computerResult.winner.type} wins!`;
+                computerBoard.classList.add("disabled");
+                isGameOver = true;
+            }
+
+            else {
+                pTurn.textContent = "Your turn! Attack the enemy!";
+                computerBoard.classList.remove("disabled");
             }
         }, 500);
     }
@@ -41,32 +58,5 @@ createBoard(humanBoard);
 createBoard(computerBoard, true, attackCallback);
 
 // place ships (random for computer)
-human.placeShip(5,4,2,"HORIZONTAL");
+human.placeShip(5, 4, 2, "HORIZONTAL");
 computer.placeShipsRandomally([5, 4, 3, 3, 2]);
-
-
-
-
-// let turn = 1;
-// let result;
-
-// console.log("=== GAME START ===");
-
-// while (true) {
-//     console.log(`\n--- Turn ${turn} ---`);
-
-//     const currentPlayer = game.getCurrentPlayer();
-//     console.log("Current player:", currentPlayer.type);
-
-//     result = game.playComputerTurn();
-
-//     console.log("Move result:", result);
-
-//     if (result.gameOver) {
-//         console.log("\n=== GAME OVER ===");
-//         console.log("Winner:", result.winner);
-//         break;
-//     }
-
-//     turn++;
-// }

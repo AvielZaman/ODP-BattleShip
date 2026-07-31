@@ -40,7 +40,7 @@
 }
 
 .human,
-.enemy{
+.enemy {
     display: flex;
     flex-direction: column;
     gap: 10px;
@@ -55,23 +55,32 @@
 }
 
 /* dynamically added */
-.cell{
+.cell {
     border: 1px solid #333;
     background-color: lightblue;
-    transition: background-color  0.2s ease-out ;
+    transition: background-color 0.2s ease-out;
     cursor: crosshair;
 }
 
-.cell:hover{
+.cell:hover {
     background-color: rgb(75, 127, 134);
 }
 
-.cell.hit{
+.cell.hit {
     background-color: red;
     cursor: not-allowed;
 }
 
-.cell.miss{
+.cell.miss {
     background-color: grey;
     cursor: not-allowed;
+}
+
+.disabled {
+    cursor: not-allowed;
+    pointer-events: none;
+}
+
+.disabled .cell:hover {
+    background-color: lightblue;
 }
