@@ -41,12 +41,12 @@ class Gameboard {
         const ship = new Ship(length);
 
         if (axisDir === "HORIZONTAL") {
-            for (let i = row; i < length; i++)
+            for (let i = 0; i < length; i++)
                 this.board[row][col + i] = ship;
         }
 
         else if (axisDir === "VERTICAL") {
-            for (let i = col; i < length; i++)
+            for (let i = 0; i < length; i++)
                 this.board[row + i][col] = ship;
         }
 
@@ -60,17 +60,18 @@ class Gameboard {
         const keyOfCoordsAttacked = this.getKeyOfCoords(rowAttacked, colAttacked);
         // check if the attack is alrady recorded as miss/hit
         if (this.hitAttacks.has(keyOfCoordsAttacked) || this.missedAttacks.has(keyOfCoordsAttacked))
-            return false;
+            return { valid: false, hit: false };
 
         const cell = this.board[rowAttacked][colAttacked];
         if (cell) {    // if theres is a ship
             cell.hit();
             this.hitAttacks.add(keyOfCoordsAttacked);
+            return { valid: true, hit: true };
         }
-        else
+        else {
             this.missedAttacks.add(keyOfCoordsAttacked);
-
-        return true;
+            return { valid: true, hit: false };
+        }
     }
 
     isAllSunk() {
