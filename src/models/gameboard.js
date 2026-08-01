@@ -16,7 +16,7 @@ class Gameboard {
     }
 
     #checkIfCanPlace(row, col, length, axisDir) {
-        if (axisDir === "HORIZONTAL") {
+        if (axisDir === "Horizontal") {
             if (col + length > this.size) return false;
 
             for (let i = 0; i < length; i++) {
@@ -24,7 +24,7 @@ class Gameboard {
             }
         }
 
-        if (axisDir === "VERTICAL") {
+        if (axisDir === "Vertical") {
             if (row + length > this.size) return false;
 
             for (let i = 0; i < length; i++) {
@@ -40,12 +40,12 @@ class Gameboard {
         // can place, make new ship and push to ships- array of objects {ship:coords}
         const ship = new Ship(length);
 
-        if (axisDir === "HORIZONTAL") {
+        if (axisDir === "Horizontal") {
             for (let i = 0; i < length; i++)
                 this.board[row][col + i] = ship;
         }
 
-        else if (axisDir === "VERTICAL") {
+        else if (axisDir === "Vertical") {
             for (let i = 0; i < length; i++)
                 this.board[row + i][col] = ship;
         }

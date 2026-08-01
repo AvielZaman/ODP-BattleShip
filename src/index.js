@@ -1,6 +1,6 @@
 import Player from "./models/player.js";
 import GameController from "./models/gameController.js";
-import { createBoard, markCell } from "./DOM.js";
+import { createBoard, markCell, createShipTray } from "./DOM.js";
 import "./styles.css";
 
 const humanBoard = document.querySelector(".human .board");
@@ -15,6 +15,21 @@ const computer = new Player("computer");
 const game = new GameController(human, computer);
 
 let isGameOver = false;
+let currentOrientation = "Horizontal";
+let draggedShip = null;
+
+const orientationBtn = document.getElementById("orientation-btn");
+orientationBtn.addEventListener("click", () =>{
+    currentOrientation = (currentOrientation === "Horizontal") ? "Vertical" : "Horizontal";
+    orientationBtn.textContent = currentOrientation;
+    const ships = document.querySelectorAll(".ship-container");
+    ships.forEach(ship => {
+        if (currentOrientation === "Vertical")
+            ship.style.flexDirection = "column";
+        else
+            ship.style.flexDirection = "row";
+    });
+});
 
 function attackCallback(row, col) {
     if (isGameOver) {
@@ -53,10 +68,32 @@ function attackCallback(row, col) {
     return result;
 }
 
+function getOrientation(){
+    return currentOrientation;
+}
 
-createBoard(humanBoard);
+function getDraggedShip(){
+    return draggedShip;
+}
+
+function setDraggedShip(dragged){
+    draggedShip = dragged;
+}
+
+function onAllShipsPlaced() {
+    computerBoard.classList.remove("disabled");
+    pTurn.textContent = "Your turn! Attack the enemy!";
+}
+
+const resetBtn = document.getElementById("reset-btn");
+resetBtn.addEventListener("click", () =>{
+    location.reload();
+});
+
+createBoard(humanBoard, false, null, human.placeShip.bind(human), getDraggedShip, onAllShipsPlaced);
 createBoard(computerBoard, true, attackCallback);
+computerBoard.classList.add("disabled"); // locked until all ships are placed
 
-// place ships (random for computer)
-human.placeShip(5, 4, 2, "HORIZONTAL");
+const shipTray = document.querySelector(".ship-tray");
+createShipTray(shipTray, [5, 4, 3, 3, 2], getOrientation, getDraggedShip, setDraggedShip);
 computer.placeShipsRandomally([5, 4, 3, 3, 2]);

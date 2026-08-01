@@ -14,8 +14,8 @@ class Player {
             while (!isPlaced) {
                 const row = Math.floor(Math.random() * 10);
                 const col = Math.floor(Math.random() * 10);
-                const direction = Math.round(Math.random()); // 50/50 chance of horizonal or vertical
-                isPlaced = this.gameboard.placeShip(row, col, length, direction === 0 ? "HORIZONTAL" : "VERTICAL");
+                const direction = Math.round(Math.random()); // 50/50 chance of horizonal or Vertical
+                isPlaced = this.gameboard.placeShip(row, col, length, direction === 0 ? "Horizontal" : "Vertical");
             }
         }
     }
