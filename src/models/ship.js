@@ -1,14 +1,14 @@
-class Ship{
-    constructor(length){
+class Ship {
+    constructor(length) {
         this.length = length;
         this.numHits = 0;
     }
 
-    hit(){
+    hit() {
         this.numHits++;
     }
 
-    isSunk(){
+    isSunk() {
         return this.numHits >= this.length;
     }
 }

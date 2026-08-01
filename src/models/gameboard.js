@@ -4,9 +4,9 @@ class Gameboard {
     constructor() {
         this.size = 10;
         this.board = Array.from({ length: this.size },
-            () => Array(this.size).fill(null));     // {ship: index of ship} for example: {submarine: 0}, {battleShip: 1}
-        this.index = 0; // for the index of the ship
+            () => Array(this.size).fill(null));
         this.ships = [];
+        this.shipCells = new Map(); // ship -> [{row, col}, ...] all cells it occupies
         this.missedAttacks = new Set();
         this.hitAttacks = new Set();
     }
@@ -18,7 +18,6 @@ class Gameboard {
     #checkIfCanPlace(row, col, length, axisDir) {
         if (axisDir === "Horizontal") {
             if (col + length > this.size) return false;
-
             for (let i = 0; i < length; i++) {
                 if (this.board[row][col + i] !== null) return false;
             }
@@ -26,7 +25,6 @@ class Gameboard {
 
         if (axisDir === "Vertical") {
             if (row + length > this.size) return false;
-
             for (let i = 0; i < length; i++) {
                 if (this.board[row + i][col] !== null) return false;
             }
@@ -37,40 +35,50 @@ class Gameboard {
 
     placeShip(row, col, length, axisDir) {
         if (!this.#checkIfCanPlace(row, col, length, axisDir)) return false;
-        // can place, make new ship and push to ships- array of objects {ship:coords}
+
         const ship = new Ship(length);
+        const cells = [];
 
         if (axisDir === "Horizontal") {
-            for (let i = 0; i < length; i++)
+            for (let i = 0; i < length; i++) {
                 this.board[row][col + i] = ship;
-        }
-
-        else if (axisDir === "Vertical") {
-            for (let i = 0; i < length; i++)
+                cells.push({ row, col: col + i });
+            }
+        } else if (axisDir === "Vertical") {
+            for (let i = 0; i < length; i++) {
                 this.board[row + i][col] = ship;
+                cells.push({ row: row + i, col });
+            }
         }
 
         this.ships.push(ship);
-        this.index++; // increment for next ship index
+        this.shipCells.set(ship, cells);
 
-        return true;
+        return ship; // truthy on success, used as "placed" indicator by callers
     }
 
     receiveAttack(rowAttacked, colAttacked) {
         const keyOfCoordsAttacked = this.getKeyOfCoords(rowAttacked, colAttacked);
-        // check if the attack is alrady recorded as miss/hit
+
         if (this.hitAttacks.has(keyOfCoordsAttacked) || this.missedAttacks.has(keyOfCoordsAttacked))
-            return { valid: false, hit: false };
+            return { valid: false, hit: false, sunk: false, sunkCells: null };
 
         const cell = this.board[rowAttacked][colAttacked];
-        if (cell) {    // if theres is a ship
+
+        if (cell) {
             cell.hit();
             this.hitAttacks.add(keyOfCoordsAttacked);
-            return { valid: true, hit: true };
+            const sunk = cell.isSunk();
+            return {
+                valid: true,
+                hit: true,
+                sunk,
+                sunkCells: sunk ? this.shipCells.get(cell) : null
+            };
         }
         else {
             this.missedAttacks.add(keyOfCoordsAttacked);
-            return { valid: true, hit: false };
+            return { valid: true, hit: false, sunk: false, sunkCells: null };
         }
     }
 

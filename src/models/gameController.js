@@ -29,7 +29,7 @@ class GameController {
         const result = opponent.gameboard.receiveAttack(row, col);
 
         if (!result.valid) {
-            return { valid: false, hit: false, gameOver: false, row, col };
+            return { valid: false, hit: false, sunk: false, sunkCells: null, gameOver: false, row, col };
         }
 
         const gameOver = opponent.gameboard.isAllSunk();
@@ -37,6 +37,8 @@ class GameController {
         const turnResult = {
             valid: true,
             hit: result.hit,
+            sunk: result.sunk,
+            sunkCells: result.sunkCells,
             row,
             col,
             gameOver,
@@ -48,15 +50,18 @@ class GameController {
         return turnResult;
     }
 
-
     playComputerTurn() {
         if (this.currentPlayer.type !== "computer") {
             return null;
         }
 
-        const move = this.currentPlayer.getComputerMove();
+        const computerPlayer = this.currentPlayer;
+        const move = computerPlayer.getComputerMove();
+        const result = this.playTurn(move.row, move.col);
 
-        return this.playTurn(move.row, move.col);
+        computerPlayer.registerAttackResult(move.row, move.col, result.hit, result.sunk);
+
+        return result;
     }
 }
 

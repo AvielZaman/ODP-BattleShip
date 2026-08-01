@@ -2,32 +2,68 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title> BattleShip</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title> BattleShip</title>
 </head>
 
 <body>
-    <div class="container">
-        <div class="headers">
-            <h1> Let's play BattleShip! </h1>
-            <p> Place Your ships Chief!</p>
-            <button id="reset-btn">Reset Game</button>
-        </div>
-        <div class="boards">
-            <div class="human">
-                <h2> Your board </h2>
-                <div class="board"></div>
-                <div class="ship-tray"></div>
-                <button id="orientation-btn"> Horizontal</button>
-            </div>
+<div class="container">
+<div class="headers">
+<h1> Let's play BattleShip! </h1>
+<p> Place Your ships Chief!</p>
+<button id="reset-btn">Reset Game</button>
+</div>
+<div class="boards">
+<div class="human">
+<h2> Your board </h2>
+<div class="board"></div>
+<div class="ship-tray"></div>
+<button id="orientation-btn"> Horizontal</button>
+</div>
 
-            <div class="enemy">
-                <h2> Enemy's board </h2>
-                <div class="board"></div>
-            </div>
-        </div>
+<div class="enemy">
+<h2> Enemy's board </h2>
+<div class="board"></div>
+<div class="fleet-status">
+<h3>Enemy fleet</h3>
+<ul id="enemy-fleet-list"></ul>
+</div>
+</div>
+</div>
+
+<div class="legend">
+<div class="legend-item">
+<span class="legend-swatch legend-water"></span>
+<span>Water</span>
+</div>
+<div class="legend-item">
+<span class="legend-swatch legend-ship"></span>
+<span>Ship</span>
+</div>
+<div class="legend-item">
+<span class="legend-swatch legend-hit"></span>
+<span>Hit</span>
+</div>
+<div class="legend-item">
+<span class="legend-swatch legend-miss"></span>
+<span>Miss</span>
+</div>
+<div class="legend-item">
+<span class="legend-swatch legend-sunk"></span>
+<span>Sunk ship</span>
+</div>
+</div>
+</div>
+
+<div id="toast" class="toast hidden"></div>
+
+<div id="popup-overlay" class="popup-overlay hidden">
+    <div class="popup-box">
+        <p id="popup-message"></p>
+        <button id="popup-btn" class="hidden">Play Again</button>
     </div>
+</div>
 </body>
 
 </html>
