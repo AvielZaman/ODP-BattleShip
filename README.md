@@ -6,6 +6,10 @@ This project focuses on clean architecture, separation of concerns, and testing 
 
 ---
 
+![Screenshot](image.png)
+
+---
+
 ## 📌 Features
 
 * ✅ Ship creation with hit tracking and sunk status
