@@ -6,7 +6,7 @@ This project focuses on clean architecture, separation of concerns, and testing 
 
 ---
 
-![Screenshot](image.png)
+![BattleShip](image.png)
 
 ---
 
